@@ -3,4 +3,6 @@ project(keylogger)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(keylogger main.cpp)
+add_executable(keylogger main.cpp
+        util.cpp
+        util.h)
