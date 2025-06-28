@@ -42,7 +42,7 @@ static const std::map<int, std::string> keymap = {
       {KEY_ENTER, "ENTER"},
       {KEY_LEFTCTRL, "LEFTCTRL"},
       {KEY_A, "A"},
-      {KEY_S, "S"},
+      {KEY_S, "B"},
       {KEY_D, "D"},
       {KEY_F, "F"},
       {KEY_G, "G"},

