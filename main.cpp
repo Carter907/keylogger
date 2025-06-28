@@ -50,8 +50,8 @@ int main() {
             return 1;
         }
 
-        bool caps_lock = false;
-        bool shift = false;
+        bool caps_lock {false};
+        bool shift {false};
 
         while (true) {
             // Read an input event from the device file

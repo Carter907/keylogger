@@ -26,7 +26,7 @@ std::string find_keyboard_device() {
 
     std::string line;
     std::string current_device_handler;
-    bool found_keyboard = false;
+    bool found_keyboard {false};
 
     while (std::getline(devices_file, line)) {
         if (line.empty()) {
