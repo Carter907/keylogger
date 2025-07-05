@@ -115,8 +115,7 @@ bool is_caps_on() {
         "capslock file found, but cannot open the caps lock file.");
   }
   int val{};
+  caps_file >> val;
 
-  while (caps_file >> val)
-    ;
   return static_cast<bool>(val);
 }
