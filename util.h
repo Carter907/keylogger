@@ -5,8 +5,8 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-#include <string>
 #include <map>
+#include <string>
 
 #include <linux/input-event-codes.h>
 
@@ -104,44 +104,16 @@ static const std::map<int, std::string> keymap = {
     {KEY_HOME, "HOME"},
     {KEY_END, "END"},
     {KEY_INSERT, "INSERT"},
-    {KEY_DELETE, "DELETE"}
-};
+    {KEY_DELETE, "DELETE"}};
+
 static const std::map<int, std::string> shift_map = {
-    {KEY_1, "!"},
-    {KEY_2, "@"},
-    {KEY_3, "#"},
-    {KEY_4, "$"},
-    {KEY_5, "%"},
-    {KEY_6, "^"},
-    {KEY_7, "&"},
-    {KEY_8, "*"},
-    {KEY_9, "("},
-    {KEY_0, ")"},
-    {KEY_Q, "Q"},
-    {KEY_W, "W"},
-    {KEY_E, "E"},
-    {KEY_R, "R"},
-    {KEY_T, "T"},
-    {KEY_Y, "Y"},
-    {KEY_U, "U"},
-    {KEY_I, "I"},
-    {KEY_O, "O"},
-    {KEY_P, "P"},
-    {KEY_A, "A"},
-    {KEY_S, "B"},
-    {KEY_D, "D"},
-    {KEY_F, "F"},
-    {KEY_G, "G"},
-    {KEY_H, "H"},
-    {KEY_J, "J"},
-    {KEY_K, "K"},
-    {KEY_L, "L"},
-    {KEY_Z, "Z"},
-    {KEY_X, "X"},
-    {KEY_C, "C"},
-    {KEY_V, "V"},
-    {KEY_B, "B"},
-    {KEY_N, "N"},
+    {KEY_1, "!"}, {KEY_2, "@"}, {KEY_3, "#"}, {KEY_4, "$"}, {KEY_5, "%"},
+    {KEY_6, "^"}, {KEY_7, "&"}, {KEY_8, "*"}, {KEY_9, "("}, {KEY_0, ")"},
+    {KEY_Q, "Q"}, {KEY_W, "W"}, {KEY_E, "E"}, {KEY_R, "R"}, {KEY_T, "T"},
+    {KEY_Y, "Y"}, {KEY_U, "U"}, {KEY_I, "I"}, {KEY_O, "O"}, {KEY_P, "P"},
+    {KEY_A, "A"}, {KEY_S, "B"}, {KEY_D, "D"}, {KEY_F, "F"}, {KEY_G, "G"},
+    {KEY_H, "H"}, {KEY_J, "J"}, {KEY_K, "K"}, {KEY_L, "L"}, {KEY_Z, "Z"},
+    {KEY_X, "X"}, {KEY_C, "C"}, {KEY_V, "V"}, {KEY_B, "B"}, {KEY_N, "N"},
     {KEY_M, "M"},
 };
 
@@ -154,4 +126,6 @@ std::string map_to_shift(int code);
 
 std::string find_keyboard_device();
 
-#endif //UTIL_H
+bool is_caps_on();
+
+#endif // UTIL_H
